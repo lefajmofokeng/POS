@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ApexPOS Ultra Platform - White-Label Multi-Tenant POS Engine</title>
+    <title>The Grid Terminal - Premium Multi-Tenant POS Engine</title>
     <!-- Inter Premium Font Matrix -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +15,12 @@
             --sb-green: #006241;
             --sb-green-light: #00754a;
             --sb-green-alpha: rgba(0, 98, 65, 0.08);
+            /* Google Cloud Console Style Colors matched to Screenshot 2026-03-20 202828.png */
+            --gcp-blue: #1a73e8;
+            --gcp-border: #e0e0e0;
+            --gcp-text-active: #1a73e8;
+            --gcp-text-inactive: #5f6368;
+            
             --bg-light: #f4f5f7;
             --surface: #ffffff;
             --text-main: #0f172a;
@@ -43,29 +49,79 @@
             overflow: hidden;
         }
 
-        /* -------------------------------------------------------------
-           CRITICAL SPEC: COMPLETE INVISIBLE SCROLLBAR EXECUTION
-           ------------------------------------------------------------- */
-        .products-panel, .cart-items, .drawer-body, .categories-filter {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+        /* CRITICAL SPEC: COMPLETE INVISIBLE SCROLLBAR EXECUTION */
+        .products-panel, .cart-items, .drawer-body, .categories-filter, .card-variant-scroller {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             overflow-y: auto;
         }
         
         .products-panel::-webkit-scrollbar,
         .cart-items::-webkit-scrollbar,
         .drawer-body::-webkit-scrollbar,
-        .categories-filter::-webkit-scrollbar {
-            display: none; /* Safari and Chrome hidden override */
+        .categories-filter::-webkit-scrollbar,
+        .card-variant-scroller::-webkit-scrollbar {
+            display: none;
         }
 
+        /* GOOGLE CLOUD CONSOLE SUB-NAV FRAMEWORK OVERHAUL */
         .categories-filter {
             display: flex;
-            gap: 8px;
+            gap: 24px;
             margin-bottom: 1.5rem;
             overflow-x: auto;
-            padding-bottom: 4px;
             width: 100%;
+            border-bottom: 1px solid var(--gcp-border);
+            padding: 0 4px;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.88rem;
+            color: var(--gcp-text-inactive);
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .category-btn:hover {
+            color: var(--gcp-text-active);
+        }
+
+        /* Exact Active indicator line matching Screenshot 2026-03-20 202828.png */
+        .category-btn.active {
+            color: var(--gcp-text-active);
+            font-weight: 600;
+        }
+
+        .category-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; /* Align precisely over container border line */
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--gcp-blue);
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+
+        /* Vertical text separator line matching the layout rules */
+        .categories-filter .nav-separator {
+            width: 1px;
+            height: 20px;
+            background-color: var(--gcp-border);
+            align-self: center;
+            margin: 0 4px;
         }
 
         /* Sidebar Navigation Architecture */
@@ -87,7 +143,6 @@
             margin-bottom: 1.25rem;
         }
 
-        /* OWNER LOGO PLACEHOLDER (Your SaaS Development Company) */
         .owner-logo-placeholder {
             width: 100%;
             height: 50px;
@@ -190,27 +245,22 @@
             font-weight: 700;
         }
 
-        /* CLIENT/TENANT PROFILE CARD PLACEHOLDER (The Venue Renting From You) */
         .tenant-client-profile-box {
-            background: var(--bg-light);
-            padding: 12px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
+            padding: 0 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 8px; border-top: 1px solid var(--border);
         }
 
         .tenant-image-placeholder {
             width: 100%;
-            height: 100px;
+            height: 40px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: left;
             color: #334155;
             font-size: 0.75rem;
             font-weight: 700;
-            border: 1px dashed #94a3b8;
             text-transform: uppercase;
         }
 
@@ -235,23 +285,32 @@
             flex-shrink: 0;
         }
 
-        .search-bar {
+        /* USEFUL REPLACEMENT: REALTIME COUNTER SUB-SYSTEM COMPONENT */
+        .system-status-container {
             display: flex;
             align-items: center;
-            background: var(--bg-light);
-            padding: 10px 16px;
-            border-radius: 30px;
-            width: 300px;
-            border: 1px solid var(--border);
+            gap: 20px;
         }
 
-        .search-bar input {
-            border: none;
-            background: transparent;
-            margin-left: 10px;
-            outline: none;
-            width: 100%;
-            font-size: 0.9rem;
+        .status-metric-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .status-indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
         }
 
         .header-meta {
@@ -276,25 +335,8 @@
             flex: 1;
             padding: 1.5rem;
             background: var(--bg-light);
-        }
-
-        .category-btn {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 7px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .category-btn.active, .category-btn:hover {
-            background: var(--sb-green);
-            color: white;
-            border-color: var(--sb-green);
+            display: flex;
+            flex-direction: column;
         }
 
         .products-grid {
@@ -302,20 +344,64 @@
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 16px;
             padding-bottom: 2rem;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
+        /* CARD ARCHITECTURE REWORK: FLIP / PANEL SYSTEM */
         .product-card {
             background: var(--surface);
-            border-radius: 6px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            height: 360px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {
-            transform: translateY(-2px);
             border-color: var(--sb-green);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-view-pane {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+            background: var(--surface);
+        }
+
+        /* Main view visible, options off-screen below */
+        .card-main-view {
+            transform: translateY(0);
+            z-index: 2;
+            opacity: 1;
+        }
+
+        .card-options-view {
+            transform: translateY(100%);
+            z-index: 1;
+            opacity: 0;
+            padding: 12px;
+        }
+
+        /* Open states toggle matrix logic */
+        .product-card.options-expanded .card-main-view {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .product-card.options-expanded .card-options-view {
+            transform: translateY(0);
+            z-index: 3;
+            opacity: 1;
         }
 
         .product-img-container {
@@ -330,9 +416,122 @@
             object-fit: cover;
         }
 
-        .product-info { padding: 12px; }
-        .product-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
-        .product-price { color: var(--sb-green); font-weight: 800; font-size: 1.1rem; }
+        /* Clean information bar showing only name and plus sign trigger */
+        .product-info-bar {
+            padding: 14px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            flex-grow: 1;
+        }
+
+        .product-name-label {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 8px;
+        }
+
+        .product-action-trigger {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .product-card:hover .product-action-trigger {
+            background: var(--sb-green);
+            color: white;
+            border-color: var(--sb-green);
+        }
+
+        /* In-Card Options Screen Content Layout */
+        .card-options-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .card-options-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .card-back-close {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+        }
+        .card-back-close:hover { color: var(--danger); }
+
+        .card-variant-scroller {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .inline-variant-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            transition: all 0.15s ease;
+        }
+
+        .inline-variant-row:hover {
+            border-color: var(--sb-green);
+            background: var(--sb-green-alpha);
+        }
+
+        .inline-variant-row.out-of-stock {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #f8fafc;
+        }
+        .inline-variant-row.out-of-stock:hover { border-color: var(--border); background: #f8fafc; }
+
+        .variant-meta-text h5 {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .variant-meta-text p {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .variant-price-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--sb-green);
+        }
 
         .stock-badge {
             position: absolute;
@@ -344,12 +543,11 @@
             font-size: 0.65rem;
             font-weight: 800;
             border: 1px solid var(--border);
+            z-index: 2;
         }
         .stock-badge.low-stock { background: #fef2f2; color: var(--danger); border-color: #fee2e2; }
 
-        /* -------------------------------------------------------------
-           SPEC COMPLIANCE: REDUCED RIGHT CHECKOUT PANEL WIDTH (380px)
-           ------------------------------------------------------------- */
+        /* SPEC COMPLIANCE: REDUCED RIGHT CHECKOUT PANEL WIDTH (380px) */
         .checkout-panel {
             width: 380px;
             background: var(--surface);
@@ -443,7 +641,7 @@
 
         .btn-action { background: #1e293b; color: white; padding: 10px 14px; border-radius: 8px; font-size: 0.8rem; border: none; cursor: pointer; font-weight: 600; }
 
-        /* Secure Split Calculator Screen Overlay Modal Configuration */
+        /* Calculator Screen Overlay Modal Configuration */
         .checkout-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -456,24 +654,13 @@
         }
 
         .split-bill-view { flex: 1; padding: 1.5rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
-        
-        /* Interactive dynamic right pane layout */
         .split-keypad-view { width: 350px; background: var(--bg-light); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; }
         
-        /* -------------------------------------------------------------
-           SUCCESS SHORT RECEIPT CARD STATE STYLING
-           ------------------------------------------------------------- */
+        /* SUCCESS SHORT RECEIPT CARD STATE STYLING */
         .success-summary-card {
-            background: #f0fdf4;
-            border: 2px solid #bbf7d0;
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            height: 100%;
-            justify-content: center;
-            animation: fadeIn 0.3s ease-out;
+            background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: var(--radius);
+            padding: 1.5rem; display: flex; flex-direction: column; gap: 16px; height: 100%;
+            justify-content: center; animation: fadeIn 0.3s ease-out;
         }
 
         @keyframes fadeIn {
@@ -492,7 +679,6 @@
         .verification-checkbox-box input { margin-top: 2px; width: 16px; height: 16px; }
         .verification-checkbox-box label { font-size: 0.75rem; font-weight: 600; color: #92400e; line-height: 1.3; }
 
-        /* Mobile Utility Trigger Actions Header Menu Component */
         .mobile-menu-toggle { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); }
 
         /* Tablet & Mobile Responsive Media Queries */
@@ -511,7 +697,6 @@
 
             header { padding: 0 1rem; }
             .mobile-menu-toggle { display: block; }
-            .search-bar { width: 180px; }
 
             .pos-container { flex-direction: column; height: calc(100vh - 75px); }
             .products-panel { flex: 1; height: 50%; }
@@ -534,9 +719,9 @@
     <!-- PLATFORM NAVIGATION SIDEBAR -->
     <aside id="appSidebar">
         <div>
-            <!-- SYSTEM LOGO PLACEHOLDER (Your SaaS/Development Company Asset Slot) -->
             <div class="owner-logo-placeholder">
-                <img src="adeline.png" style="height: 35px;"/>
+                <img src="adeline.png" style="height: 35px;" onerror="this.style.display='none';"/>
+                <span style="color:var(--text-main); font-weight:800; padding-left:10px;">CRONOS</span>
             </div>
 
             <div class="tenant-selector">
@@ -560,14 +745,10 @@
             </ul>
         </div>
         
-        <!-- ACTIVE TENANT LEASEHOLDER IMAGE PLACEHOLDER (The Venue Renting From You) -->
         <div class="tenant-client-profile-box">
             <div class="tenant-image-placeholder">
-                <img src="carlos.jpg"/>
-            </div>
-            <div style="text-align: center;">
-                <h4 style="font-size:0.75rem; font-weight:700;" id="tenantCardLabel">The Green Tavern</h4>
-                <p style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Licensed Station Lease</p>
+                <img src="carlos-removebg-preview.png" style="height: 75px;" onerror="this.style.display='none';"/>
+                <span id="tenantCardLabel" style="font-size:0.75rem; font-weight:700;">THE GREEN TAVERN (HQ)</span>
             </div>
         </div>
     </aside>
@@ -577,9 +758,17 @@
         <header>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()"><i data-lucide="menu"></i></button>
-                <div class="search-bar">
-                    <i data-lucide="search" style="color: var(--text-muted); width: 16px;"></i>
-                    <input type="text" id="productSearch" placeholder="Scan or search..." oninput="renderProducts()">
+                
+                <!-- NEW REALTIME UTILITY COMPONENT: LIVE HARDWARE & TRANSACTION TELEMETRY PILLS -->
+                <div class="system-status-container">
+                    <div class="status-metric-pill">
+                        <div class="status-indicator-dot"></div>
+                        <span>Terminal Online</span>
+                    </div>
+                    <div class="status-metric-pill" style="color: var(--sb-green);">
+                        <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
+                        <span>Vault Sessions: <strong id="telemetryTxCount">0</strong></span>
+                    </div>
                 </div>
             </div>
             <div class="header-meta">
@@ -591,19 +780,22 @@
         </header>
 
         <div class="pos-container">
-            <!-- Scrollable Product Array -->
             <div class="products-panel">
+                <!-- CATEGORIES COMPONENT MATCHING SCREENSHOT 2026-03-20 202828.png -->
                 <div class="categories-filter">
                     <button class="category-btn active" onclick="filterCategory('all')">All Catalogs</button>
                     <button class="category-btn" onclick="filterCategory('Beers')">Beers</button>
                     <button class="category-btn" onclick="filterCategory('Spirits')">Spirits</button>
                     <button class="category-btn" onclick="filterCategory('Wine')">Wine</button>
-                    <button class="category-btn" onclick="filterCategory('Snacks')">Snacks</button>
+                    <div class="nav-separator"></div>
+                    <button class="category-btn" onclick="filterCategory('Snacks')">
+                        <i data-lucide="layers" style="width: 14px; height: 14px;"></i> Snacks
+                    </button>
                 </div>
                 <div class="products-grid" id="productsGrid"></div>
             </div>
 
-            <!-- Balanced Reduced Right Side Check-out Panel Column -->
+            <!-- Right Side Check-out Panel Column -->
             <div class="checkout-panel">
                 <div class="panel-header">
                     <h3>Order Queue</h3>
@@ -634,7 +826,7 @@
             <div class="drawer-body">
                 <form id="stockIntakeForm" onsubmit="executeStockIntake(event)">
                     <div class="form-group">
-                        <label>Target Inventory Item</label>
+                        <label>Target Inventory Item Variation</label>
                         <select id="intakeProductSelect" class="form-control" required></select>
                     </div>
                     <div class="form-group">
@@ -690,7 +882,6 @@
     <!-- CALCULATOR ENGINE SECURE SCREEN MODAL LAYER -->
     <div id="checkoutScreen" class="checkout-screen">
         <div class="split-checkout-container">
-            <!-- Left Side: Receipt Preview Paper Area -->
             <div class="split-bill-view">
                 <div id="receiptPrintArea" class="receipt-paper printable-area">
                     <div style="text-align: center; margin-bottom:12px;">
@@ -708,9 +899,7 @@
                 <button class="btn btn-cash" id="cancelCheckoutBtn" style="width:100%;" onclick="closeCheckoutScreen()">Cancel Process</button>
             </div>
 
-            <!-- Right Side Container: Dynamic Switch Area (Keypad vs Success States) -->
             <div class="split-keypad-view" id="keypadSideContainer">
-                <!-- KEYPAD ENTRY INTERFACE STATE -->
                 <div id="keypadInputStateView" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                     <div>
                         <label id="keypadFieldLabel" style="font-size:0.78rem; font-weight:800; text-transform: uppercase; display:block;"></label>
@@ -747,7 +936,6 @@
                     </div>
                 </div>
 
-                <!-- NEW INTERIM TRANSACTION SUCCESS CARD STATE (Rendered via JS post-commit) -->
                 <div id="successSummaryStateView" style="display: none; height: 100%;">
                     <div class="success-summary-card">
                         <div style="text-align: center;">
@@ -788,27 +976,75 @@
         </div>
     </div>
 
-    <!-- CORE ECOSYSTEM SCRIPT MATRICES -->
+    <!-- SCRIPT MATRICES WITH IN-CARD CONFIGURATION CAPABILITIES -->
     <script>
         const multiTenantData = {
             tenant1: {
                 name: "The Green Tavern (HQ)",
                 products: [
-                    { id: 101, name: "SKYY Vodka", category: "Spirits", price: 270.00, stock: 15, img: "https://spiritly.com/cdn/shop/files/skyy-vodka-8000040007009-39211644256508_1400x.jpg?v=1683019990" },
-                    { id: 102, name: "Castle Milk Stout", category: "Beers", price: 28.00, stock: 8, img: "https://oasisliquordistributors.co.za/wp-content/uploads/2022/11/oasis_wholesaler-CastleMilkStout750ml_60_20_28New_29-145.jpg" },
-                    { id: 103, name: "Firstwatch Whisky", category: "Spirits", price: 250.00, stock: 24, img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/Firstwatch-750ml-1.jpg" },
-                    { id: 104, name: "Carling Black Label", category: "Spirits", price: 25.00, stock: 19, img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/MIN_105092_CSA.jpg" },
-                    { id: 105, name: "Castle Lite", category: "Wine", price: 28.00, stock: 4, img: "https://www.thesavanna.co.uk/cdn/shop/products/castlelite_jpg_345x@2x.webp?v=1770388609" },
-                    { id: 106, name: "Savanna Premium Cider", category: "Snacks", price: 23.50, stock: 40, img: "https://bigsaveliquor.co.za/wp-content/uploads/2023/11/Savannadry330Mlnrb1.png" }
+                    { 
+                        id: 101, name: "SKYY Vodka", category: "Spirits", img: "https://spiritly.com/cdn/shop/files/skyy-vodka-8000040007009-39211644256508_1400x.jpg?v=1683019990",
+                        sizes: [
+                            { code: "101-750", name: "750ml Bottle", price: 270.00, stock: 15 },
+                            { code: "101-1L", name: "1 Litre Bottle", price: 340.00, stock: 6 }
+                        ]
+                    },
+                    { 
+                        id: 102, name: "Castle Milk Stout", category: "Beers", img: "https://oasisliquordistributors.co.za/wp-content/uploads/2022/11/oasis_wholesaler-CastleMilkStout750ml_60_20_28New_29-145.jpg",
+                        sizes: [
+                            { code: "102-330", name: "330ml Dumpie", price: 22.00, stock: 45 },
+                            { code: "102-750", name: "750ml Returnable", price: 28.00, stock: 8 }
+                        ]
+                    },
+                    { 
+                        id: 103, name: "Firstwatch Whisky", category: "Spirits", img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/Firstwatch-750ml-1.jpg",
+                        sizes: [
+                            { code: "103-200", name: "200ml Flask", price: 85.00, stock: 12 },
+                            { code: "103-750", name: "750ml Bottle", price: 250.00, stock: 24 }
+                        ]
+                    },
+                    { 
+                        id: 104, name: "Carling Black Label", category: "Beers", img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/MIN_105092_CSA.jpg",
+                        sizes: [
+                            { code: "104-330", name: "330ml Can", price: 20.00, stock: 60 },
+                            { code: "104-440", name: "440ml Tall Boy", price: 25.00, stock: 19 },
+                            { code: "104-750", name: "750ml Quart", price: 30.00, stock: 32 }
+                        ]
+                    },
+                    { 
+                        id: 105, name: "Castle Lite", category: "Beers", img: "https://www.thesavanna.co.uk/cdn/shop/products/castlelite_jpg_345x@2x.webp?v=1770388609",
+                        sizes: [
+                            { code: "105-330", name: "330ml Bottle", price: 24.00, stock: 50 },
+                            { code: "105-440", name: "440ml Can", price: 28.00, stock: 4 }
+                        ]
+                    },
+                    { 
+                        id: 106, name: "Savanna Premium Cider", category: "Snacks", img: "https://bigsaveliquor.co.za/wp-content/uploads/2023/11/Savannadry330Mlnrb1.png",
+                        sizes: [
+                            { code: "106-330", name: "330ml Dry", price: 23.50, stock: 40 },
+                            { code: "106-500", name: "500ml Jean Can", price: 32.00, stock: 15 }
+                        ]
+                    }
                 ],
-
                 sales: []
             },
             tenant2: {
                 name: "Downtown Lounge Bar",
                 products: [
-                    { id: 201, name: "Stella Artois Draft", category: "Beers", price: 42.00, stock: 65, img: "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80" },
-                    { id: 202, name: "Johnnie Walker Black", category: "Spirits", price: 480.00, stock: 11, img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=400&q=80" }
+                    { 
+                        id: 201, name: "Stella Artois", category: "Beers", img: "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80",
+                        sizes: [
+                            { code: "201-330", name: "330ml Bottle", price: 28.00, stock: 30 },
+                            { code: "201-draft", name: "500ml Pint Draft", price: 42.00, stock: 65 }
+                        ]
+                    },
+                    { 
+                        id: 202, name: "Johnnie Walker Black", category: "Spirits", img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=400&q=80",
+                        sizes: [
+                            { code: "202-750", name: "750ml Bottle", price: 480.00, stock: 11 },
+                            { code: "202-1L", name: "1 Litre Premium", price: 590.00, stock: 5 }
+                        ]
+                    }
                 ],
                 sales: []
             }
@@ -851,12 +1087,15 @@
         }
 
         function updateSidebarCounts() {
-            document.getElementById('live-prod-count').innerText = multiTenantData[currentTenant].products.length;
+            let totalVariants = 0;
+            multiTenantData[currentTenant].products.forEach(p => totalVariants += p.sizes.length);
+            document.getElementById('live-prod-count').innerText = totalVariants;
+            document.getElementById('telemetryTxCount').innerText = multiTenantData[currentTenant].sales.length;
         }
 
         function switchTenant() {
             currentTenant = document.getElementById('tenantSwitch').value;
-            document.getElementById('tenantCardLabel').innerText = multiTenantData[currentTenant].name;
+            document.getElementById('tenantCardLabel').innerText = multiTenantData[currentTenant].name.toUpperCase();
             cart = []; activeCategory = 'all';
             renderProducts(); updateCartUI(); populateIntakeDropdown(); updateSidebarCounts(); closeAllDrawers();
         }
@@ -864,59 +1103,124 @@
         function filterCategory(cat) {
             activeCategory = cat;
             document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.toLowerCase().includes(cat.toLowerCase()) || (cat === 'all' && btn.innerText.includes('All')));
+                const actionMatch = btn.getAttribute('onclick').includes(`'${cat}'`);
+                btn.classList.toggle('active', actionMatch);
             });
             renderProducts();
         }
 
+        /* IN-CARD OPTION SWITCHER REWORK LOGIC MATRIX ENGINE */
+        function toggleCardView(cardElement, expandState) {
+            if (expandState) {
+                cardElement.classList.add('options-expanded');
+            } else {
+                cardElement.classList.remove('options-expanded');
+            }
+        }
+
         function renderProducts() {
             const grid = document.getElementById('productsGrid'); grid.innerHTML = '';
-            const search = document.getElementById('productSearch').value.toLowerCase();
             
             multiTenantData[currentTenant].products.forEach(p => {
-                if((activeCategory === 'all' || p.category === activeCategory) && p.name.toLowerCase().includes(search)) {
-                    const isLow = p.stock <= 5;
+                if(activeCategory === 'all' || p.category === activeCategory) {
+                    
+                    const totalStock = p.sizes.reduce((acc, s) => acc + s.stock, 0);
+                    const isLow = totalStock <= 8;
+                    
                     const card = document.createElement('div');
                     card.className = 'product-card';
-                    card.onclick = () => addToCart(p.id);
+                    card.id = `prod-card-${p.id}`;
+                    
+                    // Generate variant selection options for the back panel view mapping
+                    let variantRowsHTML = '';
+                    p.sizes.forEach(v => {
+                        const isOut = v.stock <= 0;
+                        variantRowsHTML += `
+                            <div class="inline-variant-row ${isOut ? 'out-of-stock' : ''}" 
+                                 onclick="${!isOut ? `event.stopPropagation(); addSizeVariantToCartById(${p.id}, '${v.code}');` : ''}">
+                                <div class="variant-meta-text">
+                                    <h5>${v.name}</h5>
+                                    <p>${isOut ? 'OUT OF STOCK' : `Stock: ${v.stock}`}</p>
+                                </div>
+                                <div class="variant-price-tag">R ${v.price.toFixed(2)}</div>
+                            </div>
+                        `;
+                    });
+
                     card.innerHTML = `
-                        <div class="product-img-container">
-                            <span class="stock-badge ${isLow ? 'low-stock' : ''}">${isLow ? 'LOW' : 'STOCK'}: ${p.stock}</span>
-                            <img src="${p.img}" alt="${p.name}">
+                        <!-- MAIN FRONT FACE: SHOWING ONLY IMAGE, NAME, AND INTERACTIVE PLUS ICON -->
+                        <div class="card-view-pane card-main-view" onclick="toggleCardView(this.parentElement, true)">
+                            <div class="product-img-container">
+                                <span class="stock-badge ${isLow ? 'low-stock' : ''}">${isLow ? 'LOW STOCK' : 'TOTAL STOCK'}: ${totalStock}</span>
+                                <img src="${p.img}" alt="${p.name}">
+                            </div>
+                            <div class="product-info-bar">
+                                <div class="product-name-label">${p.name}</div>
+                                <div class="product-action-trigger">
+                                    <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="product-info">
-                            <div class="product-name">${p.name}</div>
-                            <div class="product-price">R ${p.price.toFixed(2)}</div>
+
+                        <!-- REAR CONFIGURATION FACE: REVEALS INTERACTIVE SIZES AND PRICING WITHIN footprint -->
+                        <div class="card-view-pane card-options-view">
+                            <div class="card-options-header">
+                                <span class="card-options-title">Select Variant</span>
+                                <button class="card-back-close" onclick="event.stopPropagation(); toggleCardView(this.parentElement.parentElement.parentElement, false)">
+                                    <i data-lucide="corner-up-left" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            </div>
+                            <div class="card-variant-scroller">
+                                ${variantRowsHTML}
+                            </div>
                         </div>
                     `;
                     grid.appendChild(card);
                 }
             });
+            lucide.createIcons();
         }
 
-        function addToCart(id) {
-            const prod = multiTenantData[currentTenant].products.find(p => p.id === id);
-            if (prod.stock <= 0) return;
-            const existing = cart.find(i => i.id === id);
+        function addSizeVariantToCartById(productId, variantCode) {
+            const prod = multiTenantData[currentTenant].products.find(p => p.id === productId);
+            if (!prod) return;
+            const variant = prod.sizes.find(s => s.code === variantCode);
+            if (!variant || variant.stock <= 0) return;
+            
+            const cartItemId = variant.code;
+            const existing = cart.find(i => i.cartItemId === cartItemId);
+            
             if (existing) {
-                if(existing.qty < prod.stock) existing.qty++;
+                if(existing.qty < variant.stock) existing.qty++;
             } else {
-                cart.push({ ...prod, qty: 1 });
+                cart.push({
+                    cartItemId: cartItemId,
+                    id: prod.id,
+                    code: variant.code,
+                    name: `${prod.name} (${variant.name})`,
+                    price: variant.price,
+                    qty: 1,
+                    maxStock: variant.stock
+                });
             }
             updateCartUI();
+            
+            // Automatically reset card state back to clean view on selection
+            const cardEl = document.getElementById(`prod-card-${productId}`);
+            if (cardEl) toggleCardView(cardEl, false);
         }
 
-        function updateQty(id, change) {
-            const item = cart.find(i => i.id === id);
+        function updateQty(cartItemId, change) {
+            const item = cart.find(i => i.cartItemId === cartItemId);
             if(item) {
                 item.qty += change;
-                if(item.qty <= 0) removeItemFromCart(id);
-                if(item.qty > multiTenantData[currentTenant].products.find(p => p.id === id).stock) item.qty--;
+                if(item.qty <= 0) removeItemFromCart(cartItemId);
+                if(item.qty > item.maxStock) item.qty = item.maxStock;
             }
             updateCartUI();
         }
 
-        function removeItemFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+        function removeItemFromCart(cartItemId) { cart = cart.filter(i => i.cartItemId !== cartItemId); updateCartUI(); }
         function clearCart() { cart = []; updateCartUI(); }
 
         function updateCartUI() {
@@ -930,11 +1234,11 @@
                     <div class="item-details"><h4>${item.name}</h4><p>R ${item.price.toFixed(2)}</p></div>
                     <div class="item-pricing">
                         <div class="qty-controls">
-                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)"><i data-lucide="minus" style="width:10px;"></i></button>
+                            <button class="qty-btn" onclick="updateQty('${item.cartItemId}', -1)"><i data-lucide="minus" style="width:10px;"></i></button>
                             <span style="font-size:0.8rem; font-weight:700;">${item.qty}</span>
-                            <button class="qty-btn" onclick="updateQty(${item.id}, 1)"><i data-lucide="plus" style="width:10px;"></i></button>
+                            <button class="qty-btn" onclick="updateQty('${item.cartItemId}', 1)"><i data-lucide="plus" style="width:10px;"></i></button>
                         </div>
-                        <button class="btn-void-item" onclick="removeItemFromCart(${item.id})"><i data-lucide="trash-2" style="width:12px;"></i></button>
+                        <button class="btn-void-item" onclick="removeItemFromCart('${item.cartItemId}')"><i data-lucide="trash-2" style="width:12px;"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -952,7 +1256,6 @@
             targetedPaymentMethod = method;
             keypadBufferString = "";
             
-            // Core View Reset State Rules
             document.getElementById('keypadInputStateView').style.display = 'flex';
             document.getElementById('successSummaryStateView').style.display = 'none';
             document.getElementById('cancelCheckoutBtn').style.display = 'block';
@@ -1045,22 +1348,24 @@
             }
         }
 
-        // ALTERED CORE METHOD: REDIRECTS AUDIT TO AN INTERIM CONFIRMATION COMPONENT INSTEAD OF DEFAULTPRINT
         function commitFinalTransactionRecord() {
             let total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0) * 1.15;
             let enteredVal = parseFloat(keypadBufferString) || 0;
             
-            // Deduct stock metrics safely
-            cart.forEach(i => { multiTenantData[currentTenant].products.find(p => p.id === i.id).stock -= i.qty; });
+            cart.forEach(cartItem => { 
+                const product = multiTenantData[currentTenant].products.find(p => p.id === cartItem.id);
+                if(product) {
+                    const variant = product.sizes.find(s => s.code === cartItem.code);
+                    if(variant) variant.stock -= cartItem.qty;
+                }
+            });
             
-            // Commit to shift ledger matrices
             multiTenantData[currentTenant].sales.push({
                 timestamp: formatTo24HourTime(new Date()),
                 method: targetedPaymentMethod,
                 total: total
             });
 
-            // Populate Interim Success Component Layout UI
             document.getElementById('successTotalChargeLabel').innerText = `R ${total.toFixed(2)}`;
             document.getElementById('successTenderedLabel').innerText = `R ${enteredVal.toFixed(2)}`;
             
@@ -1075,7 +1380,6 @@
                 document.getElementById('successChangeAmountLabel').style.color = "var(--sb-green)";
             }
 
-            // Component Layout Transformation Toggle State
             document.getElementById('keypadInputStateView').style.display = 'none';
             document.getElementById('cancelCheckoutBtn').style.display = 'none';
             document.getElementById('successSummaryStateView').style.display = 'block';
@@ -1087,14 +1391,18 @@
             closeCheckoutScreen(); 
             clearCart(); 
             renderProducts();
+            updateSidebarCounts();
         }
 
         function closeCheckoutScreen() { document.getElementById('checkoutScreen').style.display = 'none'; }
+        
         function openDrawer(id) {
             closeAllDrawers(); document.getElementById(id).classList.add('open');
+            if(id === 'intakeDrawer') populateIntakeDropdown();
             if(id === 'stockDrawer') renderStockBalancesTable();
             if(id === 'reportsDrawer') renderFinancialReportsTable();
         }
+        
         function closeAllDrawers() { 
             document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open')); 
             document.getElementById('appSidebar').classList.remove('mobile-open');
@@ -1103,28 +1411,44 @@
         function populateIntakeDropdown() {
             const select = document.getElementById('intakeProductSelect'); select.innerHTML = '';
             multiTenantData[currentTenant].products.forEach(p => {
-                const opt = document.createElement('option'); opt.value = p.id;
-                opt.innerText = `${p.name} (Stock: ${p.stock})`; select.appendChild(opt);
+                p.sizes.forEach(s => {
+                    const opt = document.createElement('option'); opt.value = s.code;
+                    opt.innerText = `${p.name} - ${s.name} (Current: ${s.stock})`; 
+                    select.appendChild(opt);
+                });
             });
         }
 
         function executeStockIntake(e) {
             e.preventDefault();
-            const prodId = parseInt(document.getElementById('intakeProductSelect').value);
+            const variantCode = document.getElementById('intakeProductSelect').value;
             const amt = parseInt(document.getElementById('intakeQty').value);
-            const targetItem = multiTenantData[currentTenant].products.find(p => p.id === prodId);
-            if(targetItem) {
-                targetItem.stock += amt;
-                document.getElementById('stockIntakeForm').reset(); populateIntakeDropdown(); renderProducts(); closeAllDrawers();
+            
+            let found = false;
+            multiTenantData[currentTenant].products.forEach(p => {
+                const variant = p.sizes.find(s => s.code === variantCode);
+                if(variant) {
+                    variant.stock += amt;
+                    found = true;
+                }
+            });
+
+            if(found) {
+                document.getElementById('stockIntakeForm').reset(); 
+                populateIntakeDropdown(); 
+                renderProducts(); 
+                closeAllDrawers();
             }
         }
 
         function renderStockBalancesTable() {
             const body = document.getElementById('stockTableBody'); body.innerHTML = '';
             multiTenantData[currentTenant].products.forEach(p => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><b>${p.name}</b></td><td>${p.category}</td><td><span style="font-weight:700;">${p.stock} units</span></td>`;
-                body.appendChild(tr);
+                p.sizes.forEach(s => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td><b>${p.name}</b> <span style="color:var(--text-muted); font-size:0.75rem;">(${s.name})</span></td><td>${p.category}</td><td><span style="font-weight:700;">${s.stock} units</span></td>`;
+                    body.appendChild(tr);
+                });
             });
         }
 
