@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexPOS Ultra Platform - White-Label Multi-Tenant POS Engine</title>
+    <!-- Inter Premium Font Matrix -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icon Set Pack -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --sb-green: #006241;
+            --sb-green-light: #00754a;
+            --sb-green-alpha: rgba(0, 98, 65, 0.08);
+            --bg-light: #f4f5f7;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --radius: 4px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* -------------------------------------------------------------
+           CRITICAL SPEC: COMPLETE INVISIBLE SCROLLBAR EXECUTION
+           ------------------------------------------------------------- */
+        .products-panel, .cart-items, .drawer-body, .categories-filter {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            overflow-y: auto;
+        }
+        
+        .products-panel::-webkit-scrollbar,
+        .cart-items::-webkit-scrollbar,
+        .drawer-body::-webkit-scrollbar,
+        .categories-filter::-webkit-scrollbar {
+            display: none; /* Safari and Chrome hidden override */
+        }
+
+        .categories-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            width: 100%;
+        }
+
+        /* Sidebar Navigation Architecture */
+        aside {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            z-index: 30;
+            flex-shrink: 0;
+        }
+
+        .brand-container {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* OWNER LOGO PLACEHOLDER (Your SaaS Development Company) */
+        .owner-logo-placeholder {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--sb-green);
+        }
+
+        .tenant-selector {
+            background: var(--bg-light);
+            padding: 12px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tenant-selector label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        .tenant-selector select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin: 1rem 0 0.5rem 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 50px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links li a .link-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links li a:hover, .nav-links li.active a {
+            background: var(--sb-green-alpha);
+            color: var(--sb-green);
+        }
+
+        .nav-badge {
+            background: var(--sb-green);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        /* CLIENT/TENANT PROFILE CARD PLACEHOLDER (The Venue Renting From You) */
+        .tenant-client-profile-box {
+            background: var(--bg-light);
+            padding: 12px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tenant-image-placeholder {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px dashed #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* Main Workspace Framework */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header {
+            height: 75px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            flex-shrink: 0;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            padding: 10px 16px;
+            border-radius: 30px;
+            width: 300px;
+            border: 1px solid var(--border);
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .clock-box { text-align: right; }
+        #live-clock { font-weight: 700; color: var(--text-main); font-size: 1.05rem; }
+        #live-date { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+        .pos-container {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+            height: calc(100vh - 75px);
+        }
+
+        /* Products Display Area */
+        .products-panel {
+            flex: 1;
+            padding: 1.5rem;
+            background: var(--bg-light);
+        }
+
+        .category-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 7px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: var(--sb-green);
+            color: white;
+            border-color: var(--sb-green);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            padding-bottom: 2rem;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--sb-green);
+        }
+
+        .product-img-container {
+            height: 290px;
+            background: #e2e8f0;
+            position: relative;
+        }
+
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info { padding: 12px; }
+        .product-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
+        .product-price { color: var(--sb-green); font-weight: 800; font-size: 1.1rem; }
+
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 8px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            border: 1px solid var(--border);
+        }
+        .stock-badge.low-stock { background: #fef2f2; color: var(--danger); border-color: #fee2e2; }
+
+        /* -------------------------------------------------------------
+           SPEC COMPLIANCE: REDUCED RIGHT CHECKOUT PANEL WIDTH (380px)
+           ------------------------------------------------------------- */
+        .checkout-panel {
+            width: 380px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .panel-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h3 { font-size: 1rem; font-weight: 700; }
+
+        .cart-items {
+            flex-grow: 1;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .item-details h4 { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
+        .item-details p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        .item-pricing { display: flex; align-items: center; gap: 8px; }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface);
+            padding: 4px 8px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+        .qty-btn { border: none; background: transparent; cursor: pointer; display: flex; align-items: center; color: var(--text-muted); }
+
+        .btn-void-item {
+            background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center;
+        }
+        .btn-void-item:hover { color: var(--danger); }
+
+        .cart-summary { padding: 1.25rem; background: var(--bg-light); border-top: 1px solid var(--border); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); }
+        .summary-row.total {
+            font-size: 1.25rem; font-weight: 800; color: var(--text-main); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px;
+        }
+
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1rem; }
+        
+        .btn {
+            padding: 12px; border-radius: var(--radius); border: none; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; transition: all 0.2s;
+        }
+        .btn-cash { background: #e2e8f0; color: #334155; }
+        .btn-card { background: var(--sb-green); color: white; }
+
+        /* Drawers Engine Positioning */
+        .drawer-overlay {
+            position: absolute; top: 0; right: -100%; width: 500px; height: 100%;
+            background: var(--surface); box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            transition: right 0.3s ease; z-index: 40; display: flex; flex-direction: column; border-left: 1px solid var(--border);
+        }
+        .drawer-overlay.open { right: 0; }
+        .drawer-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-light); }
+        .drawer-body { padding: 1.25rem; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; outline: none; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+        th { background: var(--bg-light); font-weight: 700; }
+
+        .btn-action { background: #1e293b; color: white; padding: 10px 14px; border-radius: 8px; font-size: 0.8rem; border: none; cursor: pointer; font-weight: 600; }
+
+        /* Secure Split Calculator Screen Overlay Modal Configuration */
+        .checkout-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+            z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem;
+        }
+
+        .split-checkout-container {
+            display: flex; background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); width: 800px; height: 580px; max-width: 100%;
+        }
+
+        .split-bill-view { flex: 1; padding: 1.5rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* Interactive dynamic right pane layout */
+        .split-keypad-view { width: 350px; background: var(--bg-light); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* -------------------------------------------------------------
+           SUCCESS SHORT RECEIPT CARD STATE STYLING
+           ------------------------------------------------------------- */
+        .success-summary-card {
+            background: #f0fdf4;
+            border: 2px solid #bbf7d0;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .receipt-paper { border: 1px dashed #94a3b8; padding: 1.25rem; background: #fff; }
+        .cash-input-field { width: 100%; padding: 12px; font-size: 1.6rem; border: 2px solid var(--sb-green); background: #ffffff; border-radius: 8px; text-align: right; font-weight: 800; outline: none; }
+
+        .calc-keyboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+        .keypad-btn { background: #ffffff; border: 1px solid var(--border); padding: 14px; font-size: 1.1rem; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: center;}
+        .keypad-btn.action-clear { color: var(--danger); background: #fef2f2; }
+
+        .verification-checkbox-box { background: #fffbeb; border: 1px solid #fef3c7; padding: 10px; border-radius: 8px; display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .verification-checkbox-box input { margin-top: 2px; width: 16px; height: 16px; }
+        .verification-checkbox-box label { font-size: 0.75rem; font-weight: 600; color: #92400e; line-height: 1.3; }
+
+        /* Mobile Utility Trigger Actions Header Menu Component */
+        .mobile-menu-toggle { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); }
+
+        /* Tablet & Mobile Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .split-checkout-container { width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            
+            aside {
+                position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+                transition: left 0.3s ease; box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+            }
+            aside.mobile-open { left: 0; }
+
+            header { padding: 0 1rem; }
+            .mobile-menu-toggle { display: block; }
+            .search-bar { width: 180px; }
+
+            .pos-container { flex-direction: column; height: calc(100vh - 75px); }
+            .products-panel { flex: 1; height: 50%; }
+            .checkout-panel { width: 100%; height: 50%; border-left: none; border-top: 1px solid var(--border); }
+            
+            .split-checkout-container { flex-direction: column; overflow-y: auto; }
+            .split-keypad-view { width: 100%; }
+            .drawer-overlay { width: 100%; }
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            .printable-area, .printable-area * { visibility: visible; }
+            .printable-area { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PLATFORM NAVIGATION SIDEBAR -->
+    <aside id="appSidebar">
+        <div>
+            <!-- SYSTEM LOGO PLACEHOLDER (Your SaaS/Development Company Asset Slot) -->
+            <div class="owner-logo-placeholder">
+                <img src="adeline.png" style="height: 35px;"/>
+            </div>
+
+            <div class="tenant-selector">
+                <label>Renting Station Unit</label>
+                <select id="tenantSwitch" onchange="switchTenant()">
+                    <option value="tenant1">The Green Tavern (HQ)</option>
+                    <option value="tenant2">Downtown Lounge Bar</option>
+                </select>
+            </div>
+
+            <div class="nav-section-title">Sales Terminal</div>
+            <ul class="nav-links">
+                <li class="active" id="nav-pos"><a href="#" onclick="handleNavClick()"><span class="link-meta"><i data-lucide="layout-grid"></i>Register Counter</span><span class="nav-badge" id="live-prod-count">0</span></a></li>
+            </ul>
+
+            <div class="nav-section-title">Backoffice Operations</div>
+            <ul class="nav-links">
+                <li id="nav-intake"><a href="#" onclick="openDrawer('intakeDrawer')"><span class="link-meta"><i data-lucide="plus-circle"></i>Record New Stock</span></a></li>
+                <li id="nav-stock"><a href="#" onclick="openDrawer('stockDrawer')"><span class="link-meta"><i data-lucide="boxes"></i>Current Inventory</span></a></li>
+                <li id="nav-reports"><a href="#" onclick="openDrawer('reportsDrawer')"><span class="link-meta"><i data-lucide="bar-chart-3"></i>Financial Audit Logs</span></a></li>
+            </ul>
+        </div>
+        
+        <!-- ACTIVE TENANT LEASEHOLDER IMAGE PLACEHOLDER (The Venue Renting From You) -->
+        <div class="tenant-client-profile-box">
+            <div class="tenant-image-placeholder">
+                <img src="carlos.jpg"/>
+            </div>
+            <div style="text-align: center;">
+                <h4 style="font-size:0.75rem; font-weight:700;" id="tenantCardLabel">The Green Tavern</h4>
+                <p style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Licensed Station Lease</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CENTRAL WORKSPACE ENGINE -->
+    <main>
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()"><i data-lucide="menu"></i></button>
+                <div class="search-bar">
+                    <i data-lucide="search" style="color: var(--text-muted); width: 16px;"></i>
+                    <input type="text" id="productSearch" placeholder="Scan or search..." oninput="renderProducts()">
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="clock-box">
+                    <div id="live-clock">00:00:00</div>
+                    <div id="live-date">Metrics Engine Loading...</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="pos-container">
+            <!-- Scrollable Product Array -->
+            <div class="products-panel">
+                <div class="categories-filter">
+                    <button class="category-btn active" onclick="filterCategory('all')">All Catalogs</button>
+                    <button class="category-btn" onclick="filterCategory('Beers')">Beers</button>
+                    <button class="category-btn" onclick="filterCategory('Spirits')">Spirits</button>
+                    <button class="category-btn" onclick="filterCategory('Wine')">Wine</button>
+                    <button class="category-btn" onclick="filterCategory('Snacks')">Snacks</button>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+
+            <!-- Balanced Reduced Right Side Check-out Panel Column -->
+            <div class="checkout-panel">
+                <div class="panel-header">
+                    <h3>Order Queue</h3>
+                    <button onclick="clearCart()" style="background:transparent; border:none; color:var(--danger); cursor:pointer; font-weight:700; font-size:0.8rem;">Void All</button>
+                </div>
+                
+                <div class="cart-items" id="cartItemsContainer"></div>
+                
+                <div class="cart-summary">
+                    <div class="summary-row"><span>Subtotal</span><span id="subtotalPrice">R0.00</span></div>
+                    <div class="summary-row"><span>VAT (15%)</span><span id="vatPrice">R0.00</span></div>
+                    <div class="summary-row total"><span>Total Due</span><span id="totalPrice">R0.00</span></div>
+                    
+                    <div class="payment-methods">
+                        <button class="btn btn-cash" onclick="initiateProtectedCheckout('Cash')"><i data-lucide="banknote" style="width:16px;"></i> Record Cash</button>
+                        <button class="btn btn-card" onclick="initiateProtectedCheckout('Card')"><i data-lucide="credit-card" style="width:16px;"></i> Swipe Card</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- POPUP COMPONENT MANAGEMENT DRAWERS -->
+        <div id="intakeDrawer" class="drawer-overlay">
+            <div class="drawer-header">
+                <h2>Supplier Stock Intake</h2>
+                <button onclick="closeAllDrawers()" style="background:transparent; border:none; cursor:pointer;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="drawer-body">
+                <form id="stockIntakeForm" onsubmit="executeStockIntake(event)">
+                    <div class="form-group">
+                        <label>Target Inventory Item</label>
+                        <select id="intakeProductSelect" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity Received</label>
+                        <input type="number" id="intakeQty" class="form-control" min="1" required>
+                    </div>
+                    <div style="margin-top:1.5rem;">
+                        <button type="submit" class="btn-action" style="width:100%; justify-content:center; background:var(--sb-green);"><i data-lucide="save"></i> Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="stockDrawer" class="drawer-overlay">
+            <div class="drawer-header">
+                <h2>Vault Balance Sheets</h2>
+                <button class="btn-action" onclick="window.print()"><i data-lucide="printer"></i> Print</button>
+                <button onclick="closeAllDrawers()" style="background:transparent; border:none; cursor:pointer;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="drawer-body printable-area">
+                <table id="stockTable">
+                    <thead><tr><th>Description</th><th>Category</th><th>Available Stock</th></tr></thead>
+                    <tbody id="stockTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="reportsDrawer" class="drawer-overlay">
+            <div class="drawer-header">
+                <h2>Shift Audit Ledger</h2>
+                <button class="btn-action" onclick="window.print()"><i data-lucide="printer"></i> Statement</button>
+                <button onclick="closeAllDrawers()" style="background:transparent; border:none; cursor:pointer;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="drawer-body printable-area">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:1.5rem;">
+                    <div style="background:var(--bg-light); padding:12px; border-radius:12px; border:1px solid var(--border);">
+                        <span style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Cash Vault Balance</span>
+                        <h2 id="cashRevenueReport" style="color:#0f172a; font-size:1.3rem; font-weight:800; margin-top:4px;">R0.00</h2>
+                    </div>
+                    <div style="background:var(--bg-light); padding:12px; border-radius:12px; border:1px solid var(--border);">
+                        <span style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Speedpoint Settlements</span>
+                        <h2 id="cardRevenueReport" style="color:var(--sb-green); font-size:1.3rem; font-weight:800; margin-top:4px;">R0.00</h2>
+                    </div>
+                </div>
+                <table id="reportsTable">
+                    <thead><tr><th>Time</th><th>Method</th><th>Total</th></tr></thead>
+                    <tbody id="reportsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- CALCULATOR ENGINE SECURE SCREEN MODAL LAYER -->
+    <div id="checkoutScreen" class="checkout-screen">
+        <div class="split-checkout-container">
+            <!-- Left Side: Receipt Preview Paper Area -->
+            <div class="split-bill-view">
+                <div id="receiptPrintArea" class="receipt-paper printable-area">
+                    <div style="text-align: center; margin-bottom:12px;">
+                        <h2 id="receiptTenantName" style="font-size:1rem; font-weight:800;">THE GREEN TAVERN</h2>
+                        <p style="font-size:0.7rem; color:var(--text-muted);" id="receiptTimestamp">Date: --/--/---- --:--</p>
+                    </div>
+                    <div style="border-bottom:1px dashed #000; margin-bottom:10px;"></div>
+                    <div id="receiptItemsContainer" style="font-size:0.8rem; display:flex; flex-direction:column; gap:6px;"></div>
+                    <div style="border-bottom:1px dashed #000; margin-top:10px; margin-bottom:10px;"></div>
+                    <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem;">
+                        <span>GRAND TOTAL:</span><span id="receiptTotalAmount">R0.00</span>
+                    </div>
+                    <p id="paymentMethodBadge" style="margin-top:10px; font-size:0.7rem; font-weight:800; text-align:center; text-transform:uppercase; background:var(--bg-light); padding:4px;"></p>
+                </div>
+                <button class="btn btn-cash" id="cancelCheckoutBtn" style="width:100%;" onclick="closeCheckoutScreen()">Cancel Process</button>
+            </div>
+
+            <!-- Right Side Container: Dynamic Switch Area (Keypad vs Success States) -->
+            <div class="split-keypad-view" id="keypadSideContainer">
+                <!-- KEYPAD ENTRY INTERFACE STATE -->
+                <div id="keypadInputStateView" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                    <div>
+                        <label id="keypadFieldLabel" style="font-size:0.78rem; font-weight:800; text-transform: uppercase; display:block;"></label>
+                        <input type="text" id="cashTenderedInput" class="cash-input-field" readonly placeholder="0.00">
+                        
+                        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; padding:6px 0;">
+                            <span id="changeLabelContext">CHANGE DUE:</span><span id="changeDueDisplay">R0.00</span>
+                        </div>
+
+                        <div class="calc-keyboard-grid">
+                            <button class="keypad-btn" onclick="pressKey('7')">7</button>
+                            <button class="keypad-btn" onclick="pressKey('8')">8</button>
+                            <button class="keypad-btn" onclick="pressKey('9')">9</button>
+                            <button class="keypad-btn" onclick="pressKey('4')">4</button>
+                            <button class="keypad-btn" onclick="pressKey('5')">5</button>
+                            <button class="keypad-btn" onclick="pressKey('6')">6</button>
+                            <button class="keypad-btn" onclick="pressKey('1')">1</button>
+                            <button class="keypad-btn" onclick="pressKey('2')">2</button>
+                            <button class="keypad-btn" onclick="pressKey('3')">3</button>
+                            <button class="keypad-btn" onclick="pressKey('0')">0</button>
+                            <button class="keypad-btn" style="font-weight:900;" onclick="pressKey('.')">.</button>
+                            <button class="keypad-btn action-clear" onclick="pressKey('clear')"><i data-lucide="delete" style="width:16px;"></i></button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: auto; padding-top: 1rem;">
+                        <div class="verification-checkbox-box">
+                            <input type="checkbox" id="paymentVerifiedCheckbox" onchange="toggleCommitButtonState()">
+                            <label for="paymentVerifiedCheckbox" id="verificationLabelText"></label>
+                        </div>
+                        <button class="btn btn-card" id="finalizeTxCommitBtn" style="width:100%; background:#cbd5e1; color:#94a3b8; cursor:not-allowed;" onclick="commitFinalTransactionRecord()" disabled>
+                            Commit Audit Log
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NEW INTERIM TRANSACTION SUCCESS CARD STATE (Rendered via JS post-commit) -->
+                <div id="successSummaryStateView" style="display: none; height: 100%;">
+                    <div class="success-summary-card">
+                        <div style="text-align: center;">
+                            <div style="background: #22c55e; color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
+                                <i data-lucide="check-circle-2" style="width: 24px; height: 24px;"></i>
+                            </div>
+                            <h3 style="color: #166534; font-size: 1.2rem; font-weight: 800;">Transaction Logged</h3>
+                            <p style="color: #15803d; font-size: 0.75rem; font-weight: 500; margin-top: 2px;">Session audit recorded into local vault.</p>
+                        </div>
+
+                        <div style="border-top: 1px dashed #bbf7d0; border-bottom: 1px dashed #bbf7d0; padding: 12px 0; margin: 4px 0; display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #166534; font-weight: 600;">
+                                <span>Total Charged:</span>
+                                <span id="successTotalChargeLabel" style="font-weight: 800;">R0.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #166534; font-weight: 600;">
+                                <span>Amount Tendered:</span>
+                                <span id="successTenderedLabel" style="font-weight: 800;">R0.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 1.1rem; color: #14532d; font-weight: 800; background: rgba(34, 197, 94, 0.1); padding: 8px; border-radius: 6px;">
+                                <span id="successChangeHeaderLabel">CHANGE HANDOVER:</span>
+                                <span id="successChangeAmountLabel">R0.00</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+                            <button class="btn btn-cash" style="background: #ffffff; border: 1px solid #bbf7d0; color: #166534;" onclick="window.print()">
+                                <i data-lucide="printer" style="width: 16px;"></i> Print Receipt Slip
+                            </button>
+                            <button class="btn btn-card" style="background: #22c55e; color: #ffffff;" onclick="clearCartAndResetTerminal()">
+                                Next Transaction <i data-lucide="arrow-right" style="width: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE ECOSYSTEM SCRIPT MATRICES -->
+    <script>
+        const multiTenantData = {
+            tenant1: {
+                name: "The Green Tavern (HQ)",
+                products: [
+                    { id: 101, name: "SKYY Vodka", category: "Spirits", price: 270.00, stock: 15, img: "https://spiritly.com/cdn/shop/files/skyy-vodka-8000040007009-39211644256508_1400x.jpg?v=1683019990" },
+                    { id: 102, name: "Castle Milk Stout", category: "Beers", price: 28.00, stock: 8, img: "https://oasisliquordistributors.co.za/wp-content/uploads/2022/11/oasis_wholesaler-CastleMilkStout750ml_60_20_28New_29-145.jpg" },
+                    { id: 103, name: "Firstwatch Whisky", category: "Spirits", price: 250.00, stock: 24, img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/Firstwatch-750ml-1.jpg" },
+                    { id: 104, name: "Carling Black Label", category: "Spirits", price: 25.00, stock: 19, img: "https://sollykramersparkhurst.co.za/wp-content/uploads/2017/09/MIN_105092_CSA.jpg" },
+                    { id: 105, name: "Castle Lite", category: "Wine", price: 28.00, stock: 4, img: "https://www.thesavanna.co.uk/cdn/shop/products/castlelite_jpg_345x@2x.webp?v=1770388609" },
+                    { id: 106, name: "Savanna Premium Cider", category: "Snacks", price: 23.50, stock: 40, img: "https://bigsaveliquor.co.za/wp-content/uploads/2023/11/Savannadry330Mlnrb1.png" }
+                ],
+
+                sales: []
+            },
+            tenant2: {
+                name: "Downtown Lounge Bar",
+                products: [
+                    { id: 201, name: "Stella Artois Draft", category: "Beers", price: 42.00, stock: 65, img: "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80" },
+                    { id: 202, name: "Johnnie Walker Black", category: "Spirits", price: 480.00, stock: 11, img: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=400&q=80" }
+                ],
+                sales: []
+            }
+        };
+
+        let currentTenant = 'tenant1';
+        let cart = [];
+        let activeCategory = 'all';
+        let targetedPaymentMethod = 'Cash';
+        let keypadBufferString = "";
+
+        window.onload = () => {
+            lucide.createIcons();
+            initClockFramework();
+            renderProducts();
+            populateIntakeDropdown();
+            updateSidebarCounts();
+        };
+
+        function formatTo24HourTime(date) {
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+        }
+
+        function initClockFramework() {
+            const updateClock = () => {
+                const now = new Date();
+                document.getElementById('live-clock').innerText = formatTo24HourTime(now);
+                document.getElementById('live-date').innerText = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            };
+            updateClock(); setInterval(updateClock, 1000);
+        }
+
+        function toggleMobileSidebar() {
+            document.getElementById('appSidebar').classList.toggle('mobile-open');
+        }
+
+        function handleNavClick() {
+            closeAllDrawers();
+            document.getElementById('appSidebar').classList.remove('mobile-open');
+        }
+
+        function updateSidebarCounts() {
+            document.getElementById('live-prod-count').innerText = multiTenantData[currentTenant].products.length;
+        }
+
+        function switchTenant() {
+            currentTenant = document.getElementById('tenantSwitch').value;
+            document.getElementById('tenantCardLabel').innerText = multiTenantData[currentTenant].name;
+            cart = []; activeCategory = 'all';
+            renderProducts(); updateCartUI(); populateIntakeDropdown(); updateSidebarCounts(); closeAllDrawers();
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.toLowerCase().includes(cat.toLowerCase()) || (cat === 'all' && btn.innerText.includes('All')));
+            });
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid'); grid.innerHTML = '';
+            const search = document.getElementById('productSearch').value.toLowerCase();
+            
+            multiTenantData[currentTenant].products.forEach(p => {
+                if((activeCategory === 'all' || p.category === activeCategory) && p.name.toLowerCase().includes(search)) {
+                    const isLow = p.stock <= 5;
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.onclick = () => addToCart(p.id);
+                    card.innerHTML = `
+                        <div class="product-img-container">
+                            <span class="stock-badge ${isLow ? 'low-stock' : ''}">${isLow ? 'LOW' : 'STOCK'}: ${p.stock}</span>
+                            <img src="${p.img}" alt="${p.name}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-price">R ${p.price.toFixed(2)}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function addToCart(id) {
+            const prod = multiTenantData[currentTenant].products.find(p => p.id === id);
+            if (prod.stock <= 0) return;
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+                if(existing.qty < prod.stock) existing.qty++;
+            } else {
+                cart.push({ ...prod, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        function updateQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) removeItemFromCart(id);
+                if(item.qty > multiTenantData[currentTenant].products.find(p => p.id === id).stock) item.qty--;
+            }
+            updateCartUI();
+        }
+
+        function removeItemFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+        function clearCart() { cart = []; updateCartUI(); }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItemsContainer'); container.innerHTML = '';
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div class="item-details"><h4>${item.name}</h4><p>R ${item.price.toFixed(2)}</p></div>
+                    <div class="item-pricing">
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)"><i data-lucide="minus" style="width:10px;"></i></button>
+                            <span style="font-size:0.8rem; font-weight:700;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${item.id}, 1)"><i data-lucide="plus" style="width:10px;"></i></button>
+                        </div>
+                        <button class="btn-void-item" onclick="removeItemFromCart(${item.id})"><i data-lucide="trash-2" style="width:12px;"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            let vat = subtotal * 0.15;
+            let total = subtotal + vat;
+            document.getElementById('subtotalPrice').innerText = `R ${subtotal.toFixed(2)}`;
+            document.getElementById('vatPrice').innerText = `R ${vat.toFixed(2)}`;
+            document.getElementById('totalPrice').innerText = `R ${total.toFixed(2)}`;
+            lucide.createIcons();
+        }
+
+        function initiateProtectedCheckout(method) {
+            if(cart.length === 0) return;
+            targetedPaymentMethod = method;
+            keypadBufferString = "";
+            
+            // Core View Reset State Rules
+            document.getElementById('keypadInputStateView').style.display = 'flex';
+            document.getElementById('successSummaryStateView').style.display = 'none';
+            document.getElementById('cancelCheckoutBtn').style.display = 'block';
+
+            document.getElementById('cashTenderedInput').value = "";
+            document.getElementById('paymentVerifiedCheckbox').checked = false;
+            toggleCommitButtonState();
+
+            let total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0) * 1.15;
+            document.getElementById('receiptTenantName').innerText = multiTenantData[currentTenant].name.toUpperCase();
+            
+            const currentStamp = new Date();
+            document.getElementById('receiptTimestamp').innerText = `Date: ${currentStamp.toLocaleDateString()} ${formatTo24HourTime(currentStamp)}`;
+            document.getElementById('receiptTotalAmount').innerText = `R ${total.toFixed(2)}`;
+            document.getElementById('paymentMethodBadge').innerText = `Mode: ${method}`;
+            
+            const itemsContainer = document.getElementById('receiptItemsContainer'); itemsContainer.innerHTML = '';
+            cart.forEach(i => {
+                const row = document.createElement('div'); row.style.display = 'flex'; row.style.justifyContent = 'space-between';
+                row.innerHTML = `<span>${i.qty}x ${i.name}</span><span>R ${(i.price * i.qty).toFixed(2)}</span>`;
+                itemsContainer.appendChild(row);
+            });
+
+            if(method === 'Card') {
+                document.getElementById('keypadFieldLabel').innerText = "Enter Card Slip Amount (R):";
+                document.getElementById('changeLabelContext').innerText = "MATCHING STATUS:";
+                document.getElementById('changeDueDisplay').innerText = "Awaiting Entry...";
+                document.getElementById('changeDueDisplay').style.color = "var(--text-muted)";
+                document.getElementById('verificationLabelText').innerHTML = `<strong>Slip Confirmed:</strong> I checked the transaction log trace on the speedpoint layout terminal.`;
+            } else {
+                document.getElementById('keypadFieldLabel').innerText = "Cash Handed Over (R):";
+                document.getElementById('changeLabelContext').innerText = "CHANGE DUE:";
+                document.getElementById('changeDueDisplay').innerText = "R 0.00";
+                document.getElementById('changeDueDisplay').style.color = "var(--text-muted)";
+                document.getElementById('verificationLabelText').innerHTML = `<strong>Cash Verified:</strong> Notes are confirmed, change has been pulled from counter tray.`;
+            }
+
+            document.getElementById('checkoutScreen').style.display = 'flex';
+        }
+
+        function pressKey(val) {
+            if(val === 'clear') { keypadBufferString = ""; } 
+            else {
+                if(val === '.' && keypadBufferString.includes('.')) return;
+                keypadBufferString += val;
+            }
+            document.getElementById('cashTenderedInput').value = keypadBufferString;
+            calculateChangeOutput();
+            toggleCommitButtonState();
+        }
+
+        function calculateChangeOutput() {
+            let total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0) * 1.15;
+            let enteredVal = parseFloat(keypadBufferString) || 0;
+            
+            if(targetedPaymentMethod === 'Card') {
+                if(Math.abs(enteredVal - total) < 0.01) {
+                    document.getElementById('changeDueDisplay').innerText = "SLIP MATCHED";
+                    document.getElementById('changeDueDisplay').style.color = "var(--success)";
+                } else {
+                    document.getElementById('changeDueDisplay').innerText = "MISMATCH ERROR";
+                    document.getElementById('changeDueDisplay').style.color = "var(--danger)";
+                }
+            } else {
+                let change = enteredVal - total;
+                if(change < 0) {
+                    document.getElementById('changeDueDisplay').innerText = "Shortage!";
+                    document.getElementById('changeDueDisplay').style.color = "var(--danger)";
+                } else {
+                    document.getElementById('changeDueDisplay').innerText = `R ${change.toFixed(2)}`;
+                    document.getElementById('changeDueDisplay').style.color = "var(--sb-green)";
+                }
+            }
+        }
+
+        function toggleCommitButtonState() {
+            const verified = document.getElementById('paymentVerifiedCheckbox').checked;
+            const btn = document.getElementById('finalizeTxCommitBtn');
+            let total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0) * 1.15;
+            let enteredVal = parseFloat(keypadBufferString) || 0;
+
+            let conditionValid = false;
+            if(targetedPaymentMethod === 'Cash' && enteredVal >= total) conditionValid = true;
+            if(targetedPaymentMethod === 'Card' && Math.abs(enteredVal - total) < 0.01) conditionValid = true;
+
+            if(verified && conditionValid) {
+                btn.disabled = false; btn.style.background = 'var(--sb-green)'; btn.style.color = '#fff'; btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true; btn.style.background = '#cbd5e1'; btn.style.color = '#94a3b8'; btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // ALTERED CORE METHOD: REDIRECTS AUDIT TO AN INTERIM CONFIRMATION COMPONENT INSTEAD OF DEFAULTPRINT
+        function commitFinalTransactionRecord() {
+            let total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0) * 1.15;
+            let enteredVal = parseFloat(keypadBufferString) || 0;
+            
+            // Deduct stock metrics safely
+            cart.forEach(i => { multiTenantData[currentTenant].products.find(p => p.id === i.id).stock -= i.qty; });
+            
+            // Commit to shift ledger matrices
+            multiTenantData[currentTenant].sales.push({
+                timestamp: formatTo24HourTime(new Date()),
+                method: targetedPaymentMethod,
+                total: total
+            });
+
+            // Populate Interim Success Component Layout UI
+            document.getElementById('successTotalChargeLabel').innerText = `R ${total.toFixed(2)}`;
+            document.getElementById('successTenderedLabel').innerText = `R ${enteredVal.toFixed(2)}`;
+            
+            if(targetedPaymentMethod === 'Card') {
+                document.getElementById('successChangeHeaderLabel').innerText = "SPEEDPOINT MATCH:";
+                document.getElementById('successChangeAmountLabel').innerText = "VERIFIED";
+                document.getElementById('successChangeAmountLabel').style.color = "var(--success)";
+            } else {
+                let change = enteredVal - total;
+                document.getElementById('successChangeHeaderLabel').innerText = "CHANGE HANDOVER:";
+                document.getElementById('successChangeAmountLabel').innerText = `R ${change.toFixed(2)}`;
+                document.getElementById('successChangeAmountLabel').style.color = "var(--sb-green)";
+            }
+
+            // Component Layout Transformation Toggle State
+            document.getElementById('keypadInputStateView').style.display = 'none';
+            document.getElementById('cancelCheckoutBtn').style.display = 'none';
+            document.getElementById('successSummaryStateView').style.display = 'block';
+            
+            lucide.createIcons();
+        }
+
+        function clearCartAndResetTerminal() {
+            closeCheckoutScreen(); 
+            clearCart(); 
+            renderProducts();
+        }
+
+        function closeCheckoutScreen() { document.getElementById('checkoutScreen').style.display = 'none'; }
+        function openDrawer(id) {
+            closeAllDrawers(); document.getElementById(id).classList.add('open');
+            if(id === 'stockDrawer') renderStockBalancesTable();
+            if(id === 'reportsDrawer') renderFinancialReportsTable();
+        }
+        function closeAllDrawers() { 
+            document.querySelectorAll('.drawer-overlay').forEach(d => d.classList.remove('open')); 
+            document.getElementById('appSidebar').classList.remove('mobile-open');
+        }
+
+        function populateIntakeDropdown() {
+            const select = document.getElementById('intakeProductSelect'); select.innerHTML = '';
+            multiTenantData[currentTenant].products.forEach(p => {
+                const opt = document.createElement('option'); opt.value = p.id;
+                opt.innerText = `${p.name} (Stock: ${p.stock})`; select.appendChild(opt);
+            });
+        }
+
+        function executeStockIntake(e) {
+            e.preventDefault();
+            const prodId = parseInt(document.getElementById('intakeProductSelect').value);
+            const amt = parseInt(document.getElementById('intakeQty').value);
+            const targetItem = multiTenantData[currentTenant].products.find(p => p.id === prodId);
+            if(targetItem) {
+                targetItem.stock += amt;
+                document.getElementById('stockIntakeForm').reset(); populateIntakeDropdown(); renderProducts(); closeAllDrawers();
+            }
+        }
+
+        function renderStockBalancesTable() {
+            const body = document.getElementById('stockTableBody'); body.innerHTML = '';
+            multiTenantData[currentTenant].products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><b>${p.name}</b></td><td>${p.category}</td><td><span style="font-weight:700;">${p.stock} units</span></td>`;
+                body.appendChild(tr);
+            });
+        }
+
+        function renderFinancialReportsTable() {
+            const sales = multiTenantData[currentTenant].sales;
+            let cashSum = sales.filter(s => s.method === 'Cash').reduce((acc, s) => acc + s.total, 0);
+            let cardSum = sales.filter(s => s.method === 'Card').reduce((acc, s) => acc + s.total, 0);
+            
+            document.getElementById('cashRevenueReport').innerText = `R ${cashSum.toFixed(2)}`;
+            document.getElementById('cardRevenueReport').innerText = `R ${cardSum.toFixed(2)}`;
+
+            const body = document.getElementById('reportsTableBody'); body.innerHTML = '';
+            sales.slice().reverse().forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${s.timestamp}</td><td>${s.method}</td><td style="color:var(--sb-green); font-weight:700;">R ${s.total.toFixed(2)}</td>`;
+                body.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
